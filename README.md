@@ -14,5 +14,4 @@ This will provide a versioned report of:
 - VMs and their current state
 
 This will produce a nicely formatted README output displaying your environment.  
-An example of this output:
-![](examples/README.md)
+An example of this output can be found in examples/README.md
