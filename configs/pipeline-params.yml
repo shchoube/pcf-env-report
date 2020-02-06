@@ -1,0 +1,42 @@
+foundation:
+  name: 
+  docker_registry: 
+  smtp_host: 
+  director: 
+  cf_api:
+  opsman_url:
+
+pipelines:
+  email-from: 
+  email-to: 
+  env_rpt:
+    git: https://github.com/theautoroboto/pcf-env-report.git
+    start: 
+    stop: 
+    run_interval: 
+
+secrets:
+  bosh_admin:
+    username:
+    password:
+  opsman:
+    username: 
+    password: 
+  cf-mgmt:
+    username: 
+    password: 
+  docker:
+    username:
+    password:
+  concourse:
+    git:
+      username: 
+      password: 
+      private_key: |
+    -----BEGIN CERTIFICATE-----
+    -----END CERTIFICATE-----
+
+certs:
+  PCF_CERT: |
+    -----BEGIN CERTIFICATE-----
+    -----END CERTIFICATE-----

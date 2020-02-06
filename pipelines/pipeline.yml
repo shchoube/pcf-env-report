@@ -1,0 +1,48 @@
+resources:
+- name: pcf-run-report
+  type: git
+  source:
+    uri: ((pipelines.swiss_army_git))
+    username: ((secrets.concourse.git_username))
+    password: ((secrets.concourse.git_password))
+    branch: master
+    skip_ssl_verification: true
+
+- name: schedule
+  type: time
+  source:
+   start: ((pipelines.env_rpt.start))
+   stop: ((pipelines.env_rpt.stop))
+   location: America/New_York
+   interval: ((pipelines.env_rpt.run_interval))
+
+- name: pipeline_image
+  type: docker-image
+  source:
+    repository: ((pipelines.docker_registry))/pcf-admins/clitools
+    insecure_registries: [ ((pipelines.docker_registry)) ]
+
+jobs:
+- name: gather-data
+  plan:
+  - get: schedule
+    trigger: true
+  - get: pcf-run-report
+  - get: pipeline_image
+  - task: generate-files
+    file: pcf-run-report/tasks/task.yml
+    image: pipeline_image
+    params:
+      BOSH_ADMIN_CLIENT: ((secrets.bosh_admin.username))
+      PCF_SCRT: ((secrets.bosh_admin.password))
+      PCF_CERT: ((certs.PCF_CERT))
+      PCF_ENV: ((foundation.name))
+      RPT_GIT: ((pipelines.env_rpt.git))
+      GIT_CERT: ((secrets.concourse.git.private_key))
+      PCF_DIRECTOR: ((foundation.director))
+      CF_API: ((foundation.cf_api))
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: ((foundation.opsman_url))
+      OPSMAN_CLIENT_ID: ((secrets.opsman.username))
+      OPSMAN_PASSWORD: ((secrets.opsman.password))
+      MGMT_PASS: ((secrets.cf-mgmt.password))
+      MGMT_USER: ((secrets.cf-mgmt.username))
